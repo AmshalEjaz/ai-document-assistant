@@ -194,3 +194,38 @@ async def chat(request: ChatRequest):
             status_code=500,
             detail=str(exc)
         )
+    
+@app.get("/api/documents")
+def get_documents():
+    allowed_extensions = {
+        ".pdf",
+        ".docx",
+        ".txt",
+        ".csv",
+    }
+
+    documents = []
+
+    for file_path in UPLOAD_DIR.iterdir():
+
+        if not file_path.is_file():
+            continue
+
+        if file_path.suffix.lower() not in allowed_extensions:
+            continue
+
+        size_bytes = file_path.stat().st_size
+
+        documents.append({
+            "name": file_path.name,
+            "size": size_bytes,
+        })
+
+    documents.sort(
+        key=lambda item: item["name"].lower()
+    )
+
+    return {
+        "documents": documents,
+        "total": len(documents),
+    }
