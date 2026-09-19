@@ -1,4 +1,6 @@
 .env
+**/.env
+backend/.env
 chroma_db/
 venv/
 node_modules/
